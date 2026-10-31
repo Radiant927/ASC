@@ -1,0 +1,58 @@
+[
+  {
+    "scenario": "unitree_z1_dual_arm_cleanup_pencils",
+    "case_id": 1,
+    "time_before_optim": null,
+    "time_after_optim": null,
+    "psnr": null
+  },
+  {
+    "scenario": "unitree_z1_dual_arm_cleanup_pencils",
+    "case_id": 2,
+    "time_before_optim": null,
+    "time_after_optim": null,
+    "psnr": null
+  },
+  {
+    "scenario": "unitree_z1_dual_arm_cleanup_pencils",
+    "case_id": 3,
+    "time_before_optim": null,
+    "time_after_optim": null,
+    "psnr": null
+  },
+  {
+    "scenario": "unitree_z1_dual_arm_cleanup_pencils",
+    "case_id": 4,
+    "time_before_optim": null,
+    "time_after_optim": null,
+    "psnr": null
+  },
+  {
+    "scenario": "unitree_z1_dual_arm_stackbox",
+    "case_id": 1,
+    "time_before_optim": null,
+    "time_after_optim": null,
+    "psnr": null
+  },
+  {
+    "scenario": "unitree_z1_dual_arm_stackbox",
+    "case_id": 2,
+    "time_before_optim": null,
+    "time_after_optim": null,
+    "psnr": null
+  },
+  {
+    "scenario": "unitree_z1_dual_arm_stackbox",
+    "case_id": 3,
+    "time_before_optim": null,
+    "time_after_optim": null,
+    "psnr": null
+  },
+  {
+    "scenario": "unitree_z1_dual_arm_stackbox",
+    "case_id": 4,
+    "time_before_optim": null,
+    "time_after_optim": null,
+    "psnr": null
+  }
+]

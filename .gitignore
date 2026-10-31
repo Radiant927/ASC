@@ -18,10 +18,6 @@ __pycache__/
 *.pyc
 *.pyo
 
-# 本地保留、不提交的赛题二工作
-task2/
-submission/
-
 # HPCG/HPL 编译产物
 *.o
 *.mod
