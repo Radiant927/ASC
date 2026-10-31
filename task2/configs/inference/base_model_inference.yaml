@@ -1,5 +1,0 @@
-model:
-  target: mock
-  params:
-    image_size: [40, 64]
-    channels: 4
