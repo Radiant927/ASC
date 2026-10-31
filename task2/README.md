@@ -1,27 +1,9 @@
-# Task2：UnifoLM-WMA-0 推理管线验证
+# Task2：UnifoLM-WMA-0 推理优化（个人）
 
-没有模型权重，只验证了推理管线；结果是 Mock，不代表真实性能。
+提交目录：`Radiant927_worldmodel/`
 
-## 文件
-| 文件 | 说明 |
-|------|------|
-| `base_model_inference.py` | Mock 推理脚本 |
-| `run_ablations.sh` | 一键跑三组消融 |
-| `configs/inference/base_model_inference.yaml` | 占位配置 |
-| `report_task2.md` | 实验报告 |
+- `code/`：推理包装、PSNR 计算、summary 生成、图表、proposal、Colab notebook
+- `proposal_file/ASC26_Task2_Proposal.docx`
+- `results/summary.json`
 
-## 运行
-```bash
-bash run_ablations.sh
-```
-
-## 结果
-| 组别 | ddim_steps | 总耗时(s) | 单步(ms) | 峰值显存(GB) |
-|------|-----------|----------|---------|-------------|
-| Baseline | -1 | 0.065 | 0.06 | 0.02 |
-| Opt-50 | 50 | 0.133 | 2.67 | 0.01 |
-| Opt-20 | 20 | 0.143 | 7.16 | 0.01 |
-
-Mock 模式没有加载模型，数字无参考价值，详见 `report_task2.md`。
-
-官方提交结构见 `TeamName_worldmodel/`。
+当前没有模型权重和真实推理结果，`summary.json` 里的 `null` 表示待实测。正式提交前需要补齐 2 个场景、8 个样本的视频、`output.log` 和 PSNR。
