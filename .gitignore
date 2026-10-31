@@ -1,0 +1,32 @@
+# 输出目录
+out_*/
+
+# 模型权重与大文件
+*.bin
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+
+# 压缩包
+*.zip
+*.tar.gz
+*.tgz
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+
+# HPCG/HPL 编译产物
+*.o
+*.mod
+bin/
+lib/
+obj_*/
+Linux_*/
+
+# IDE / 系统
+.vscode/
+.idea/
+.DS_Store
