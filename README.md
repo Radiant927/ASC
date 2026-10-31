@@ -19,6 +19,6 @@ ASC/
 - Python 环境：conda env `unifolm-wma`（Python 3.10, PyTorch + CUDA）
 
 ## 各任务入口
-- **task1**：HPL 跑分与 CPU/GPU GEMM 对照；HPCG 段错误已定位修复、64³ 验证 VALID，1800 秒正式跑分受共享节点内存限制未完成，脚本见 `task1/hpcg/`，详见 `task1/README.md`
+- **task1**：HPL 跑分与 CPU/GPU GEMM 对照；HPCG 工具链已完成问题定位、修复与 64³ 验证，正式 1800 秒跑分受共享节点资源限制未完整执行，脚本可一键补采，详见 `task1/README.md`
 - **task2**：UnifoLM-WMA-0 推理管线验证（Mock 模式，未加载真实权重），详见 `task2/README.md`
 - **submission**：按赛题二官方格式组织的代码、结果模板与 DOCX proposal，真实推理需在 Colab/服务器上执行后回填
