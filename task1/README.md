@@ -1,7 +1,7 @@
 # Task1：HPL/HPCG 基准测试与 CPU-GPU 算力对照实验
 
 ## 实验目标
-在 Snorlax 服务器上完成 HPL 基准跑分；尝试 HPCG 3.0 未跑通（缺少可提交长时间 MPI 作业的入口），改用稠密矩阵乘法（GEMM）作为代理算例，对比 CPU 与 GPU 浮点算力。
+在 Snorlax 服务器上完成 HPL 基准跑分；HPCG 3.0 编译成功但运行段错误，暂未完成 ≥1800 秒正式跑分，完整编译/输入/运行/功耗脚本见 `hpcg/`，待补跑；同时用稠密矩阵乘法（GEMM）作为代理算例，对比 CPU 与 GPU 浮点算力。
 
 ## 环境
 - CPU：双路 Intel Xeon Platinum 8352V，共 72 核
@@ -14,6 +14,7 @@
 |------|------|
 | `report_task1.md` | 完整实验报告（含 HPL 跑分结果、HPCG 尝试说明、GEMM 对照表） |
 | `HPL.dat` | HPL 运行参数文件（N=20000, NB=192, 6×6 进程网格） |
+| `hpcg/` | HPCG 3.0 编译、输入生成、1800 秒运行与功耗采集脚本 |
 | `cpu_gemm.py` | CPU 矩阵乘法测速脚本（numpy） |
 | `gpu_gemm.py` | GPU 矩阵乘法测速脚本（PyTorch, CUDA） |
 | `run_gemm.sh` | 一键运行 CPU+GPU 测速 |

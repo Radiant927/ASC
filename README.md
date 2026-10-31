@@ -6,7 +6,8 @@
 ```
 ASC/
 ├── task1/   # 赛题一：HPL / HPCG 基准测试与 CPU-GPU 算力对照实验
-└── task2/   # 赛题二：UnifoLM-WMA-0 世界模型推理优化（DDIM 采样消融）
+├── task2/   # 赛题二：UnifoLM-WMA-0 世界模型推理优化（DDIM 采样消融）
+└── submission/TeamName_worldmodel/   # 赛题二官方提交格式（code / proposal_file / results）
 ```
 
 ## 实验环境
@@ -18,5 +19,6 @@ ASC/
 - Python 环境：conda env `unifolm-wma`（Python 3.10, PyTorch + CUDA）
 
 ## 各任务入口
-- **task1**：HPL 跑分与 CPU/GPU GEMM 对照；HPCG 3.0 尝试未跑通，详见 `task1/README.md`
+- **task1**：HPL 跑分与 CPU/GPU GEMM 对照；HPCG 3.0 编译成功但运行段错误，完整补跑脚本见 `task1/hpcg/`，详见 `task1/README.md`
 - **task2**：UnifoLM-WMA-0 推理管线验证（Mock 模式，未加载真实权重），详见 `task2/README.md`
+- **submission**：按赛题二官方格式组织的代码、结果模板与 DOCX proposal，真实推理需在 Colab/服务器上执行后回填

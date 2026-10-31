@@ -44,3 +44,5 @@ python base_model_inference.py \
 | Opt-20 | 20 | 0.143 | 7.16 | 0.01 |
 
 详见 `report_task2.md`。
+
+> 正式提交版本（官方目录结构、Colab notebook、PSNR 评估与 proposal）见 `../submission/TeamName_worldmodel/`。

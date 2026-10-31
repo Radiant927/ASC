@@ -25,6 +25,7 @@ bin/
 lib/
 obj_*/
 Linux_*/
+task1/hpcg/src/
 
 # IDE / 系统
 .vscode/
