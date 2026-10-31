@@ -9,7 +9,7 @@ ASC/
 │   └── hpcg/
 └── task2/
     ├── README.md
-    └── Radiant927_worldmodel/   # code / proposal_file / results
+    └── Radiant_worldmodel/   # code / proposal_file / results
 ```
 
 ## 环境
@@ -26,4 +26,4 @@ ASC/
 ## 入口
 
 - task1：`task1/report_task1.docx`
-- task2：`task2/Radiant927_worldmodel/`
+- task2：`task2/Radiant_worldmodel/`

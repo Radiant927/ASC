@@ -48,7 +48,7 @@ def main():
     ap.add_argument("--summary", default="results/summary.json")
     ap.add_argument("--chart", default="results/psnr_chart.png")
     ap.add_argument("--output", default="proposal_file/ASC26_Task2_Proposal.docx")
-    ap.add_argument("--team", default="Radiant927")
+    ap.add_argument("--team", default="Radiant")
     ap.add_argument("--colab-link", default="待填写")
     args = ap.parse_args()
 
@@ -167,8 +167,8 @@ def main():
 
     doc.add_heading("八、提交说明", level=1)
     heading_font(doc.paragraphs[-1])
-    doc.add_paragraph(f"代码：task2/Radiant927_worldmodel/code/")
-    doc.add_paragraph(f"结果：task2/Radiant927_worldmodel/results/（summary.json + 8 个 case 目录）")
+    doc.add_paragraph(f"代码：task2/Radiant_worldmodel/code/")
+    doc.add_paragraph(f"结果：task2/Radiant_worldmodel/results/（summary.json + 8 个 case 目录）")
     doc.add_paragraph(f"Colab 共享链接：{args.colab_link}")
 
     output = Path(args.output)

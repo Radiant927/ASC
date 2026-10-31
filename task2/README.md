@@ -1,6 +1,6 @@
 # Task2：UnifoLM-WMA-0 推理优化（个人）
 
-提交目录：`Radiant927_worldmodel/`
+提交目录：`Radiant_worldmodel/`
 
 - `code/`：推理包装、PSNR 计算、summary 生成、图表、proposal、Colab notebook
 - `proposal_file/ASC26_Task2_Proposal.docx`
