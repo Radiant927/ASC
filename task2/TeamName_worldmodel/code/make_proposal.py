@@ -167,8 +167,8 @@ def main():
 
     doc.add_heading("八、提交说明", level=1)
     heading_font(doc.paragraphs[-1])
-    doc.add_paragraph(f"代码：submission/TeamName_worldmodel/code/")
-    doc.add_paragraph(f"结果：submission/TeamName_worldmodel/results/（summary.json + 8 个 case 目录）")
+    doc.add_paragraph(f"代码：task2/TeamName_worldmodel/code/")
+    doc.add_paragraph(f"结果：task2/TeamName_worldmodel/results/（summary.json + 8 个 case 目录）")
     doc.add_paragraph(f"Colab 共享链接：{args.colab_link}")
 
     output = Path(args.output)

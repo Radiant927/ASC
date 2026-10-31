@@ -24,4 +24,4 @@ bash run_ablations.sh
 
 Mock 模式没有加载模型，数字无参考价值，详见 `report_task2.md`。
 
-正式提交结构见 `../submission/TeamName_worldmodel/`。
+官方提交结构见 `TeamName_worldmodel/`。

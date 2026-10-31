@@ -41,7 +41,7 @@ Mock 模式没有 UNet 前向，耗时主要来自 Python 调度、日志和指�
 | `configs/inference/base_model_inference.yaml` | 占位配置 |
 | `report_task2.md` | 本报告 |
 
-正式提交结构见 `../submission/TeamName_worldmodel/`。
+正式提交结构见 `TeamName_worldmodel/`。
 
 ## 运行
 ```bash
