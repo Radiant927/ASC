@@ -75,9 +75,9 @@ def main():
     doc.add_heading("一、复现目标", level=1)
     heading_font(doc.paragraphs[-1])
     doc.add_paragraph(
-        "基于 UnifoLM-WMA-0 世界模型，选择 unitree_z1_dual_arm_cleanup_pencils 与 "
-        "unitree_z1_dual_arm_stackbox 两个场景，每个场景 4 个 case，复现官方推理流程；"
-        "在保证每个样本 PSNR ≥ 25 的前提下压缩推理时间，并对比优化前后的单样本推理耗时。"
+        "基于 UnifoLM-WMA-0，复现 unitree_z1_dual_arm_cleanup_pencils 和 "
+        "unitree_z1_dual_arm_stackbox 两个场景，每个场景 4 个 case。"
+        "比较优化前后的单样本推理时间，并要求每个样本 PSNR ≥ 25。"
     )
 
     doc.add_heading("二、实验环境", level=1)
@@ -98,29 +98,28 @@ def main():
     doc.add_heading("三、复现流程", level=1)
     heading_font(doc.paragraphs[-1])
     for text in [
-        "1. 克隆官方仓库并按 README 安装依赖；",
-        "2. 通过 HuggingFace 下载 UnifoLM-WMA-0-Dual 权重；",
-        "3. 下载 5 个场景、20 个样本的初始条件与参考视频，放置到仓库目录，并在 configs/inference/world_model_interaction.yaml 中设置 data_dir 绝对路径；",
-        "4. 执行 bash {scenario}/{case_id}/run_world_model_interaction.sh，从输出日志读取 real time 作为单样本推理时间；",
-        "5. 使用 PSNR 评估脚本对比生成视频与参考视频，逐样本记录 PSNR。",
+        "1. 克隆官方仓库并安装依赖。",
+        "2. 下载 UnifoLM-WMA-0-Dual 权重。",
+        "3. 下载 5 个场景、20 个样本的输入和参考视频，放到仓库目录，并在 configs/inference/world_model_interaction.yaml 中设置 data_dir。",
+        "4. 执行 bash {scenario}/{case_id}/run_world_model_interaction.sh，从输出中读取 real time。",
+        "5. 用 PSNR 脚本对比生成视频和参考视频，记录每个样本的 PSNR。",
     ]:
         doc.add_paragraph(text)
 
     doc.add_heading("四、优化方法", level=1)
     heading_font(doc.paragraphs[-1])
     doc.add_paragraph(
-        "优化点：将扩散采样步数从官方默认值降低到 25 步，并将 ddim_eta 设为 0（确定性 DDIM 采样）。"
-        "采样步数是视频生成推理的主要计算开销来源，减少步数可以线性压缩 UNet 前向次数；"
-        "通过 PSNR ≥ 25 的约束确认画质损失在可接受范围内。"
+        "优化方法：把扩散采样步数从官方默认值降到 25，ddim_eta 设为 0。"
+        "步数减少后 UNet 前向次数下降，推理时间缩短；用 PSNR ≥ 25 检查画质是否可接受。"
     )
     doc.add_paragraph(
-        "实现方式：code/prepare_opt_config.py 读取官方配置，自动定位采样步数字段并生成 "
-        "world_model_interaction_opt.yaml；run_case.sh 在 optimized 模式下临时替换官方配置，"
-        "运行结束后恢复原配置，保证 baseline 与 optimized 使用同一套代码和输入。"
+        "实现：prepare_opt_config.py 读取官方配置，生成 world_model_interaction_opt.yaml；"
+        "run_case.sh 在 optimized 模式下临时替换配置，运行结束后恢复，"
+        "baseline 和 optimized 使用同一套代码和输入。"
     )
     doc.add_paragraph(
-        "未计入结果的后续优化方向：torch.compile、FP16/FP8 推理、xformers 注意力、帧分块推理。"
-        "这些方案需要修改模型代码，须在真实权重上验证 PSNR 后再纳入对比。"
+        "以下方案未计入结果：torch.compile、FP16/FP8、xformers、帧分块。"
+        "这些需要改模型代码，要先用真实权重验证 PSNR。"
     )
 
     doc.add_heading("五、推理时间对比", level=1)
@@ -162,9 +161,8 @@ def main():
     doc.add_heading("七、结论与后续工作", level=1)
     heading_font(doc.paragraphs[-1])
     doc.add_paragraph(
-        "当前仓库已完成可执行的复现与评测管线；真实推理需要权重与输入数据就位后在 Colab 上运行，"
-        "并按 results/README.md 的要求回填日志、视频、summary.json 与 PSNR 图表。"
-        "若任一样本 PSNR 低于 25，将回退采样步数或调整优化策略后重新评测。"
+        "代码和评测管线已就绪。真实数据需要在 Colab 或服务器上跑完后，按 results/README.md 回填；"
+        "如果任一样本 PSNR < 25，降低优化强度后重测。"
     )
 
     doc.add_heading("八、提交说明", level=1)
