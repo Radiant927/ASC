@@ -1,28 +1,37 @@
-# HPCG 3.0 正式跑分脚本
+# HPCG 跑分脚本（3.1，兼容 3.0）
 
-当前状态：HPCG 3.0 编译成功，启动运行时出现段错误，暂未完成 ≥1800 秒正式跑分。脚本保持完整可用，问题修复后可直接补跑。
+## 当前状态
+
+- 运行段错误已定位并修复：源码中混入的调试代码向不存在的 `../Matrix_information/` 写矩阵，`fopen` 返回 NULL 后被直接传给 `fprintf`；删除该代码后程序正常。
+- 64³ 网格 4 进程 / 36 进程均输出 `HPCG result is VALID`，报告版本 3.1。
+- 640³、36 进程、1800 秒正式跑分在共享登录节点上启动后，节点内存迅速升高并失去响应，未取得完整结果。正式跑分必须在独立计算节点或作业提交入口执行。
 
 ## 文件
 
 | 文件 | 说明 |
 |------|------|
-| `build_hpcg.sh` | 拉取 `HPCG-release-3-0-0`，基于 `setup/Make.*` 模板生成 `Make.Linux_MPI` 并编译 |
-| `gen_hpcg_input.py` | 生成 `hpcg.dat`（网格尺寸 + 运行时间，默认 1800 秒） |
-| `hpcg.dat` | 默认输入：640×640×640，运行 1800 秒 |
-| `run_hpcg.sh` | 运行 ≥1800 秒正式测试，日志写入 `../logs/`，同时启动功耗采样 |
-| `power_sample.sh` | 周期采集功耗（优先 IPMI，其次 nvidia-smi GPU 总功耗） |
+| `build_hpcg.sh` | 拉取并编译 HPCG；可用 `HPCG_VERSION=HPCG-release-3-1-0` 指定 3.1 |
+| `gen_hpcg_input.py` | 生成 `hpcg.dat`；默认 256³、1800 秒，`--n 0` 按内存估算 |
+| `hpcg.dat` | 默认安全输入：256×256×256，1800 秒 |
+| `run_hpcg.sh` | 运行 ≥1800 秒测试，日志写入 `../logs/`，同时启动功耗采样 |
+| `power_sample.sh` | 功耗采集：ACPI 功率计 > IPMI > nvidia-smi |
+| `collect_diagnostics.sh` | 环境、链接、gdb 回栈与小网格验证 |
+| `TROUBLESHOOTING.md` | 段错误排查记录 |
 
 ## 补跑步骤
 
 ```bash
 cd task1/hpcg
 bash build_hpcg.sh
-python3 gen_hpcg_input.py --n 640 --runtime 1800
-NP=36 bash run_hpcg.sh
+python3 gen_hpcg_input.py --n 256 --runtime 1800
+NP=16 bash run_hpcg.sh
 ```
+
+确认日志包含 `VALID`、没有 `Quick Path`、执行时间 ≥1800 秒，再把 `../logs/` 下的日志与功耗 CSV 回填报告。
 
 ## 注意事项
 
-- 赛题要求 HPCG 3.0、运行时间 ≥1800 秒，且禁止 Quick Path；`hpcg.dat` 第 4 行不能设为 0。
-- 功耗必须 < 3 kW。`power_sample.sh` 优先使用 `ipmitool dcmi` 读取整机功耗（可能需要 root 权限）；只有 `nvidia-smi` 时采集的是 GPU 总功耗，不能代表整机功耗，报告中需注明。
-- 运行结束后检查日志包含 `VALID`，并将 `../logs/` 下的日志与功耗 CSV 回填到报告。
+- **不要在共享登录节点上跑大网格**。640³ + 36 进程会占用上百 GB 内存，足以拖垮登录节点。测试用 64³ / 128³，正式跑分放在独立计算节点。
+- 赛题要求 HPCG 3.0、运行时间 ≥1800 秒，禁止 Quick Path；`hpcg.dat` 第 4 行不能为 0。
+- 功耗必须 < 3 kW；优先使用 ACPI 功率计或 PDU/IPMI 的整机读数，`nvidia-smi` 只代表 GPU，不能作为整机功耗。
+- 若需更高分数，在独立节点上再增大 `--n`（如 384/512），先用小网格确认内存占用。

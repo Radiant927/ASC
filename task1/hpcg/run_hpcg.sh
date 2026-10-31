@@ -4,7 +4,7 @@
 set -euo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-NP=${NP:-36}
+NP=${NP:-16}
 HPCG_BIN=${HPCG_BIN:-}
 DAT=${HPCG_DAT:-$SCRIPT_DIR/hpcg.dat}
 LOG_DIR=${LOG_DIR:-$SCRIPT_DIR/../logs}
@@ -25,6 +25,11 @@ if [ ! -f "$DAT" ]; then
 fi
 
 mkdir -p "$LOG_DIR"
+CORES=$(nproc 2>/dev/null || echo 1)
+THREADS=${OMP_NUM_THREADS:-$(( CORES / NP ))}
+[ "$THREADS" -lt 1 ] && THREADS=1
+export OMP_NUM_THREADS="$THREADS"
+echo "OMP_NUM_THREADS=$THREADS（cores=$CORES, np=$NP）"
 WORK=$(mktemp -d)
 SAMPLER=""
 cleanup() {

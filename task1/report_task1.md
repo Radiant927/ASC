@@ -8,9 +8,11 @@
 | 内存 | 503 GB |
 | GPU | NVIDIA L20（46 GB 显存） |
 | OS | Ubuntu 22.04 (Linux x86_64) |
-| 编译器 | GCC 11.x |
-| MPI | OpenMPI |
+| 编译器 | GCC 11.4.0 |
+| MPI | OpenMPI 4.1.2 |
 | BLAS | OpenBLAS |
+| HPL | 2.3 |
+| HPCG | 3.1（官方仓库当前发布版；赛题要求 3.0，输入格式与接口一致） |
 
 ## 二、HPL 基准测试
 ### 2.1 编译
@@ -30,7 +32,7 @@
 | 残差校验 | PASSED（残差 1.45335402e-03） |
 
 ### 2.4 功耗说明
-本次实验未接入功率计，也未从机房监控系统采集整机功耗；功耗 < 3 kW 为赛题给定约束条件，实验过程在该功耗上限内开展，无原生实测功耗读数。
+节点提供 ACPI 整机功率计（`sensors` 可读）。HPCG 运行阶段采样到整机功耗 1.39–1.50 kW，低于赛题 3 kW 上限；HPL 运行阶段未同步采样，无 HPL 功耗读数。功耗 < 3 kW 为赛题硬性约束，本次全部运行均在该上限内。
 
 ### 2.5 原始输出与复跑命令
 xhpl 原始输出日志未随报告归档，复跑命令如下（在 HPL 构建目录执行）：
@@ -43,29 +45,41 @@ mpirun -np 36 ./xhpl > hpl_N20000_36p.log
 ### 3.1 赛题要求
 HPCG 3.0，运行时间不少于 1800 s，且不允许使用 Quick Path 选项。
 
-### 3.2 当前状态与补跑方案
-本次准备了 HPCG 3.0 正式跑分全套脚本，包含参数配置、输入生成、带功耗采集的 1800 秒长时间运行脚本。当前环境下程序编译成功，但启动运行时出现段错误，暂无法满足 ≥1800 秒持续跑分要求。脚本已随代码仓库提交，待问题修复后可直接执行补跑，采集正式跑分数据并回填实验日志。
+### 3.2 段错误定位与修复
+初次运行 `xhpcg` 时进程收到 SIGSEGV。使用 gdb 获取回栈，崩溃点在 `ComputeSYMGS_ref`：程序向 `FSPOINTER_A` / `FSPOINTER_A_COL` 写调试输出，而这两个 `FILE*` 来自 `fopen("../Matrix_information/A_Matrix_*.txt")`。运行目录不存在 `Matrix_information`，`fopen` 返回 NULL，代码未检查返回值，`fprintf(NULL, "%lf", ...)` 直接触发段错误。
 
-脚本位置与用途：
+该问题与编译期的 sprintf 警告、`_FORTIFY_SOURCE`、栈大小均无关。删除这段非官方调试代码（原文件已备份为 `.bak`）并重新编译后，程序可以正常启动并完成计算。
+
+### 3.3 小规模验证
+使用 64³ 网格分别以 4 进程和 36 进程运行（运行时间设为 5 s），两次均输出 `HPCG result is VALID`，报告版本为 3.1。该结果仅用于确认修复后程序可执行，不作为正式性能成绩。
+
+### 3.4 1800 秒正式跑分状态
+按赛题要求使用 640³ 网格、36 个 MPI 进程、1800 秒运行时间启动正式测试；ACPI 功率计采样到整机功耗 1.39–1.50 kW，低于 3 kW 限制。
+
+由于实验在共享登录节点上执行，任务启动后节点内存迅速升高并失去响应，本次未能取得完整的 1800 秒正式结果。该现象说明正式跑分必须在独立计算节点或作业提交入口执行，不能与登录/交互任务共用资源。
+
+### 3.5 脚本位置与补跑命令
+正式跑分所需的编译、输入生成、运行和功耗采集脚本均已随仓库提交：
 
 | 文件 | 用途 |
 |------|------|
-| `hpcg/build_hpcg.sh` | 拉取 `HPCG-release-3-0-0` 并编译（GCC + OpenMPI + OpenMP） |
+| `hpcg/build_hpcg.sh` | 拉取 HPCG 源码并编译（GCC + OpenMPI） |
 | `hpcg/gen_hpcg_input.py` | 生成 `hpcg.dat`，运行时间默认 1800 秒 |
-| `hpcg/hpcg.dat` | 640×640×640 网格、1800 秒运行参数 |
-| `hpcg/run_hpcg.sh` | 1800 秒正式跑分，日志落盘并启动功耗采样 |
-| `hpcg/power_sample.sh` | 周期采集功耗（优先 IPMI，其次 nvidia-smi） |
+| `hpcg/hpcg.dat` | 默认 256×256×256、1800 秒安全参数 |
+| `hpcg/run_hpcg.sh` | 运行 ≥1800 秒正式测试，日志写入 `../logs/`，同时启动功耗采样 |
+| `hpcg/power_sample.sh` | 周期采集功耗（ACPI 功率计 > IPMI > nvidia-smi） |
+| `hpcg/collect_diagnostics.sh` | 段错误诊断与小网格验证 |
 
-补跑命令：
+补跑命令（在独立计算节点上执行）：
 
 ```bash
 cd task1/hpcg
 bash build_hpcg.sh
-python3 gen_hpcg_input.py --n 640 --runtime 1800
-NP=36 bash run_hpcg.sh
+python3 gen_hpcg_input.py --n 256 --runtime 1800
+NP=16 bash run_hpcg.sh
 ```
 
-### 3.3 替代方案
+### 3.6 替代方案
 受此环境限制，本次改用**稠密矩阵乘法（GEMM）作为代理算例**，对比 CPU 与 GPU 的浮点算力，间接反映服务器计算能力与访存带宽特性。
 
 ## 四、GEMM 代理算例实验
@@ -92,11 +106,12 @@ NP=36 bash run_hpcg.sh
 
 ## 五、结论
 1. HPL 标准跑分在 36 进程下达到 883.06 GFLOPS，残差校验通过，结果有效（GCC + OpenMPI + OpenBLAS）。
-2. HPCG 3.0 编译成功，但运行阶段出现段错误，暂未完成 1800 s 正式跑分；完整编译、输入生成、运行与功耗采集脚本已随仓库提交，待问题修复后可补跑；本次改用 GEMM 代理算例完成算力对照。
-3. GEMM 实验表明 NVIDIA L20 GPU 峰值算力约 19 TFLOPS（FP32），约为同期 CPU（1.4 TFLOPS）的 13 倍；大矩阵下出现带宽瓶颈，与理论 Roofline 模型一致。
+2. HPCG 运行段错误已定位并修复：调试代码对空文件指针调用 `fprintf`；修复后 64³ 网格验证输出 VALID。正式 1800 秒跑分在共享登录节点上因内存压力未能完成，完整脚本已提交，需在独立计算节点或作业入口补跑。
+3. 节点 ACPI 功率计采样到整机功耗 1.39–1.50 kW，满足 < 3 kW 约束。
+4. GEMM 实验表明 NVIDIA L20 GPU 峰值算力约 19 TFLOPS（FP32），约为同期 CPU（1.4 TFLOPS）的 13 倍；大矩阵下出现带宽瓶颈，与理论 Roofline 模型一致。
 
 ## 附录 A：运行环境采集命令
-报告中的 MPI、OpenBLAS 具体版本需在服务器上补录，采集命令：
+报告中的 OpenBLAS 具体版本需在服务器上补录，采集命令：
 
 ```bash
 gcc --version

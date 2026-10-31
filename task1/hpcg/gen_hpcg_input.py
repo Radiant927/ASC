@@ -8,7 +8,7 @@ BYTES_PER_POINT = 216  # HPCG 每网格点约 27 个 double
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--n", type=int, default=None, help="三维网格边长，默认按内存估算")
+    ap.add_argument("--n", type=int, default=256, help="三维网格边长；默认 256，设为 0 按内存估算")
     ap.add_argument("--runtime", type=int, default=1800, help="运行时间（秒），赛题要求 >= 1800")
     ap.add_argument("--memory-gb", type=float, default=503.0)
     ap.add_argument("--memory-fraction", type=float, default=0.4)
@@ -19,7 +19,7 @@ def main():
         raise SystemExit("赛题要求 HPCG 运行时间不少于 1800 秒")
 
     n = args.n
-    if n is None:
+    if n <= 0:
         points = args.memory_gb * 1e9 * args.memory_fraction / BYTES_PER_POINT
         n = max(104, int(points ** (1 / 3) // 2 * 2))
 
