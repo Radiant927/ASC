@@ -15,8 +15,6 @@
 | `hpcg.dat` | 默认安全输入：256×256×256，1800 秒 |
 | `run_hpcg.sh` | 运行 ≥1800 秒测试，日志写入 `../logs/`，同时启动功耗采样 |
 | `power_sample.sh` | 功耗采集：ACPI 功率计 > IPMI > nvidia-smi |
-| `collect_diagnostics.sh` | 环境、链接、gdb 回栈与小网格验证 |
-| `TROUBLESHOOTING.md` | 段错误排查记录 |
 
 ## 补跑步骤
 

@@ -68,7 +68,6 @@ HPCG 3.0，运行时间不少于 1800 s，且不允许使用 Quick Path 选项�
 | `hpcg/hpcg.dat` | 默认 256×256×256、1800 秒安全参数 |
 | `hpcg/run_hpcg.sh` | 运行 ≥1800 秒正式测试，日志写入 `../logs/`，同时启动功耗采样 |
 | `hpcg/power_sample.sh` | 周期采集功耗（ACPI 功率计 > IPMI > nvidia-smi） |
-| `hpcg/collect_diagnostics.sh` | 段错误诊断与小网格验证 |
 
 以上流程已在服务器上完成编译与小网格验证。补跑命令（在独立计算节点上执行）：
 
